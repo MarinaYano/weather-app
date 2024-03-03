@@ -24,9 +24,9 @@ const Detail = () => {
   }, [])
 
   const fetchWeatherInfo = (query: string) => {
-    const WEATHER_API_KEY = import.meta.env.REACT_APP_WEATHER_API_KEY
+    const WEATHER_API_KEY = import.meta.env.VITE_APP_WEATHER_API_KEY
   
-    axios.get(`https://api.weatherapi.com/v1/forecast.json?key=658fea5a068e4df9ac624224232811&q=${query}&days=3`)
+    axios.get(`https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${query}&days=3`)
       .then(res => {
         console.log(res.data)
         setWeather({
