@@ -1,19 +1,43 @@
+import { SetStateAction, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 
-const Search = () => {
+interface SearchProp {
+  onSearch: (city: string) => void
+}
+
+const Search: React.FC<SearchProp> = ({ onSearch }) => {
+  const [city, setCity] = useState<string>("")
+
+  const handleChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+    setCity(e.target.value)
+  }
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    onSearch(city)
+    setCity("")
+  }
+
   return (
-    <div className="mt-10 relative z-1">
-      <div className="w-full flex justify-center">
-        <form className="border-solid border-2 rounded-lg border-zinc-400 py-1 px-4 flex justify-between w-80">
-          <input type="text" placeholder="Enter a city name" className="bg-transparent w-full" />
-          <button className="text-zinc-400	"><FiSearch /></button>
-        </form>
+    <>
+      <div className="mt-10 relative z-1">
+        <div className="w-full flex justify-center">
+          <form 
+            className="border-solid border-2 rounded-lg border-zinc-400 py-1 px-4 flex justify-between w-80"
+            onSubmit={handleSubmit}
+            >
+            <input 
+              type="text" 
+              placeholder="Enter a city name" 
+              className="bg-transparent w-full"
+              value={city}
+              onChange={handleChange}
+            />
+            <button type="submit" className="text-zinc-400	"><FiSearch /></button>
+          </form>
+        </div>
       </div>
-      <div className="w-full text-center my-5">
-        <h1 className="text-xl text-white sm:text-4xl sm:mb-2">Vancouver</h1>
-        <p className="text-sm text-white sm:text-base">2024-03-02 6:19 PM</p>
-      </div>
-    </div>
+    </>
   )
 }
 

@@ -2,48 +2,13 @@ import { FaDroplet } from "react-icons/fa6";
 import { FaWind } from "react-icons/fa";
 import { LuSun } from "react-icons/lu";
 import { FaMoon } from "react-icons/fa";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { Weather } from "../App";
 
-type Weather = {
-  temp: number;
-  condition: string;
-  high: number;
-  low: number;
-  humidity: number;
-  wind: number;
-  uv: number;
-  moon: string;
+interface DetailProp {
+  weather: Weather | undefined;
 }
 
-const Detail = () => {
-  const [weather, setWeather] = useState<Weather>()
-  
-  useEffect(() => {
-    fetchWeatherInfo('Vancouver')
-  }, [])
-
-  const fetchWeatherInfo = (query: string) => {
-    const WEATHER_API_KEY = import.meta.env.VITE_APP_WEATHER_API_KEY
-  
-    axios.get(`https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${query}&days=3`)
-      .then(res => {
-        console.log(res.data)
-        setWeather({
-          temp: res.data.current.temp_c,
-          condition: res.data.current.condition.text,
-          high: res.data.forecast.forecastday[0].day.maxtemp_c,
-          low: res.data.forecast.forecastday[0].day.mintemp_c,
-          humidity: res.data.current.humidity,
-          wind: res.data.current.wind_kph,
-          uv: res.data.current.uv,
-          moon: res.data.forecast.forecastday[0].astro.moon_phase,
-        })
-      })
-      .catch((error) => {
-        console.log("ERROR: ", error.message)
-      })
-  }
+const Detail: React.FC<DetailProp> = ({ weather }) => {
 
   return (
     <>
