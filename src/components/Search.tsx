@@ -23,7 +23,7 @@ const Search: React.FC<SearchProp> = ({ onSearch }) => {
       <div className="mt-10 relative z-1">
         <div className="w-full flex justify-center">
           <form 
-            className="border-solid border-2 rounded-lg border-zinc-400 py-1 px-4 flex justify-between w-80"
+            className="rounded-lg bg-zinc-950 bg-opacity-60 py-1 px-4 flex justify-between w-80"
             onSubmit={handleSubmit}
             >
             <input 
