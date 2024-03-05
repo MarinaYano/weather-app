@@ -30,8 +30,26 @@ export type Hour = {
 };
 
 function App() {
-  const [weather, setWeather] = useState<Weather>()
-  const [hourData, setHourData] = useState<Hour[]>([])
+  const [weather, setWeather] = useState<Weather>({
+    temp_c: 0,
+    temp_f: 0,
+    condition: '',
+    high: 0,
+    low: 0,
+    humidity: 0,
+    wind: 0,
+    uv: 0,
+    moon: '',
+    cityName: '',
+    localTime: '',
+  })
+  const [hourData, setHourData] = useState<Hour[]>([{
+    chanceOfRain: 0,
+    icon: '',
+    temp_c: 0,
+    temp_f: 0,
+    time: '',
+  }])
   const [loading, setLoading] = useState<boolean>(true);
 
   const fetchWeatherInfo = (input: string) => {
@@ -75,15 +93,15 @@ function App() {
 
   return (
     <div className='w-10/12 sm:max-w-screen-lg my-0 mx-auto h-screen overflow-scroll'>
-      {loading ? (
-        <p>Loading</p>
-      ) : (<>
-        <Background weather={weather} />
-        <Search onSearch={fetchWeatherInfo} />
-        <CityInfo weather={weather} />
-        <Detail weather={weather} />
-        <HourlyForecast hourData={hourData} />
-      </>)}
+      {loading ? (<p>Loading</p>) : (
+        <>
+          <Background weather={weather} />
+          <Search onSearch={fetchWeatherInfo} />
+          <CityInfo weather={weather} />
+          <Detail weather={weather} />
+          <HourlyForecast hourData={hourData} />
+        </>
+      )}
       
     </div>
   )
