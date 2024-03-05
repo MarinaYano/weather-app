@@ -12,10 +12,10 @@ const Background: React.FC<BgProp> = ({ weather}) => {
   const [bgImage, setBgImage] =useState<string>('')
 
   useEffect(() => {
-    fetchBgImage(weather.cityName)
+    fetchBgImage()
   }, [])
 
-  const fetchBgImage = (query: string) => {
+  const fetchBgImage = () => {
     setLoading(true)
 
     const BG_IMAGE_API_KEY = import.meta.env.VITE_APP_BG_IMAGE_API_KEY
@@ -23,15 +23,15 @@ const Background: React.FC<BgProp> = ({ weather}) => {
       Authorization: `Client-ID ${BG_IMAGE_API_KEY}`,
     };
 
-    axios.get(`https://api.unsplash.com/search/photos?`,{
+    axios.get(`https://api.unsplash.com/search/photos`,{
       headers, params: {
         query: `${weather.cityName},${weather.condition}`,
         orientation: 'landscape',
       } 
     })
       .then(res => {
-        const randomeNum = Math.floor(Math.random() * 10)
-        setBgImage(res.data.results[randomeNum].urls.regular)
+        const randomNum = Math.floor(Math.random() * 10)
+        setBgImage(res.data.results[randomNum].urls.regular)
         setLoading(false)
       })
       .catch((error) => {console.log("ERROR: ", error.message)})
