@@ -1,13 +1,14 @@
 import './App.css'
 import Background from './components/Background'
-import Detail from './components/Detail'
 import Search from './components/Search'
+import CityInfo from './components/CityInfo'
+import Detail from './components/Detail'
 import HourlyForecast from './components/HourlyForecast'
 import { useEffect, useState } from "react";
 import axios from "axios";
-import CityInfo from './components/CityInfo'
+import Spinner from './components/Spinner'
 
-export type Weather = {
+export interface Weather {
   temp_c: number;
   temp_f: number;
   condition: string;
@@ -21,7 +22,7 @@ export type Weather = {
   localTime: string;
 }
 
-export type Hour = {
+export interface Hour {
   chanceOfRain: number;
   icon: string;
   temp_c: number;
@@ -50,9 +51,10 @@ function App() {
     temp_f: 0,
     time: '',
   }])
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const fetchWeatherInfo = (input: string) => {
+    setLoading(true)
     const WEATHER_API_KEY = import.meta.env.VITE_APP_WEATHER_API_KEY
   
     axios.get(`https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${input}&days=3`)
@@ -83,8 +85,8 @@ function App() {
       })
       .catch((error) => {
         console.log("ERROR: ", error.message)
-        setLoading(false)
       })
+      .finally(() => setLoading(false))
   }
 
   useEffect(() => {
@@ -93,15 +95,18 @@ function App() {
 
   return (
     <div className='w-10/12 sm:max-w-screen-lg my-0 mx-auto h-screen overflow-scroll'>
-      {loading ? (<p>Loading</p>) : (
+      {loading ? (
         <>
-          <Background weather={weather} />
           <Search onSearch={fetchWeatherInfo} />
-          <CityInfo weather={weather} />
-          <Detail weather={weather} />
-          <HourlyForecast hourData={hourData} />
+          <Spinner />
         </>
-      )}
+        ) : (<>
+        <Background weather={weather} />
+        <Search onSearch={fetchWeatherInfo} />
+        <CityInfo weather={weather} />
+        <Detail weather={weather} />
+        <HourlyForecast hourData={hourData} /></>)
+      }
       
     </div>
   )
