@@ -1,12 +1,10 @@
 import { Hour } from "../App";
-// import { Line } from "react-chartjs-2";
-// import 'chart.js/auto';
-
-type HourlyForecastProp = {
+interface HourlyForecastProp {
   hourData: Hour[];
 }
 
 const HourlyForecast: React.FC<HourlyForecastProp> = ({ hourData }) => {
+
 
   return (
     <div className="relative z-1 mb-5">
@@ -23,6 +21,8 @@ const HourlyForecast: React.FC<HourlyForecastProp> = ({ hourData }) => {
             </div>
           )
         })}
+      </div>
+      <div className="mt-5">
       </div>
     </div>
   )

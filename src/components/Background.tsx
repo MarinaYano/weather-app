@@ -1,12 +1,56 @@
+import { useEffect, useState } from "react";
 import { Weather } from "../App";
-
+import axios from "axios";
+import Spinner from "./Spinner";
+import Error from "./Error";
 interface BgProp {
-  weather: Weather | undefined;
+  weather: Weather;
 }
 
-const Background: React.FC<BgProp> = ({ weather }) => {
+const Background: React.FC<BgProp> = ({ weather  }) => {
+  const [loading, setLoading] = useState<boolean>(false)
+  const [bgImage, setBgImage] =useState<string>('')
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetchBgImage();
+  }, []);
+
+  const fetchBgImage = () => {
+    setLoading(true)
+
+    const BG_IMAGE_API_KEY = import.meta.env.VITE_APP_BG_IMAGE_API_KEY
+    const headers = {
+      Authorization: `Client-ID ${BG_IMAGE_API_KEY}`,
+    };
+
+    axios.get(`https://api.unsplash.com/search/photos`,{
+      headers, params: {
+        query: `${weather.cityName},${weather.condition}`,
+        orientation: 'landscape',
+      } 
+    })
+      .then(res => {
+        const randomNum = Math.floor(Math.random() * 10)
+        setBgImage(res.data.results[randomNum].urls.regular)
+        setLoading(false)
+      })
+      .catch((error) => {
+        console.log("ERROR: ", error.message)
+        setError("Sorry, something went wrong. Please try again later.")
+      })
+      .finally(() => {setLoading(false)})
+  }
+
   return (
-    <div style={{backgroundImage: `url(https://source.unsplash.com/1600x900/?${weather?.cityName})`}} className=" h-full w-full bg-cover absolute top-0 left-0 z-99">
+    <div className="h-full w-full bg-cover absolute top-0 left-0 z-99">
+      {loading ? (
+        <Spinner />
+      ) : error ? (
+        <Error />
+      ): (
+        <div style={{backgroundImage: `url(${bgImage})`}} className=" h-full w-full bg-cover"></div>
+      )}
     </div>
   )
 }
