@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 
 interface SearchProp {
@@ -8,11 +8,11 @@ interface SearchProp {
 const Search: React.FC<SearchProp> = ({ onSearch }) => {
   const [city, setCity] = useState<string>("")
 
-  const handleChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setCity(e.target.value)
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     onSearch(city)
     setCity("")
@@ -29,11 +29,11 @@ const Search: React.FC<SearchProp> = ({ onSearch }) => {
             <input 
               type="text" 
               placeholder="Enter a city name" 
-              className="bg-transparent w-full"
+              className="bg-transparent w-full outline-none text-white"
               value={city}
-              onChange={handleChange}
+              onChange={handleInputChange}
             />
-            <button type="submit" className="text-zinc-400	"><FiSearch /></button>
+            <button type="submit" className="text-white	"><FiSearch /></button>
           </form>
         </div>
       </div>
