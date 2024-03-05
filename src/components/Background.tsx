@@ -2,18 +2,19 @@ import { useEffect, useState } from "react";
 import { Weather } from "../App";
 import axios from "axios";
 import Spinner from "./Spinner";
-
+import Error from "./Error";
 interface BgProp {
   weather: Weather;
 }
 
-const Background: React.FC<BgProp> = ({ weather}) => {
+const Background: React.FC<BgProp> = ({ weather  }) => {
   const [loading, setLoading] = useState<boolean>(false)
   const [bgImage, setBgImage] =useState<string>('')
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchBgImage()
-  }, [])
+    fetchBgImage();
+  }, []);
 
   const fetchBgImage = () => {
     setLoading(true)
@@ -34,7 +35,10 @@ const Background: React.FC<BgProp> = ({ weather}) => {
         setBgImage(res.data.results[randomNum].urls.regular)
         setLoading(false)
       })
-      .catch((error) => {console.log("ERROR: ", error.message)})
+      .catch((error) => {
+        console.log("ERROR: ", error.message)
+        setError("Sorry, something went wrong. Please try again later.")
+      })
       .finally(() => {setLoading(false)})
   }
 
@@ -42,7 +46,9 @@ const Background: React.FC<BgProp> = ({ weather}) => {
     <div className="h-full w-full bg-cover absolute top-0 left-0 z-99">
       {loading ? (
         <Spinner />
-      ) : (
+      ) : error ? (
+        <Error />
+      ): (
         <div style={{backgroundImage: `url(${bgImage})`}} className=" h-full w-full bg-cover"></div>
       )}
     </div>

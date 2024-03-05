@@ -7,6 +7,7 @@ import HourlyForecast from './components/HourlyForecast'
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from './components/Spinner'
+import Error from './components/Error'
 
 export interface Weather {
   temp_c: number;
@@ -52,9 +53,11 @@ function App() {
     time: '',
   }])
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null)
 
   const fetchWeatherInfo = (input: string) => {
     setLoading(true)
+    setError(null)
     const WEATHER_API_KEY = import.meta.env.VITE_APP_WEATHER_API_KEY
   
     axios.get(`https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${input}&days=3`)
@@ -85,6 +88,7 @@ function App() {
       })
       .catch((error) => {
         console.log("ERROR: ", error.message)
+        setError("An error occurred while fetching weather data.")
       })
       .finally(() => setLoading(false))
   }
@@ -100,6 +104,12 @@ function App() {
           <Search onSearch={fetchWeatherInfo} />
           <Spinner />
         </>
+        ) : error ? (
+          <div className='w-full flex flex-col items-center'>
+            <Background weather={weather} />
+            <Search onSearch={fetchWeatherInfo} />
+            <Error />
+          </div>
         ) : (<>
         <Background weather={weather} />
         <Search onSearch={fetchWeatherInfo} />
