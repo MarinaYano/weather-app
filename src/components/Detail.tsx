@@ -6,19 +6,21 @@ import { Weather } from "../App";
 
 interface DetailProp {
   weather: Weather;
+  tempUnit: boolean;
 }
 
-const Detail: React.FC<DetailProp> = ({ weather }) => {
+const Detail: React.FC<DetailProp> = ({ weather, tempUnit }) => {
+  const tempSymbol = tempUnit ? 'C°' : 'F°';
 
   return (
     <>
       <div className="sm:flex sm:gap-5">
         <div className="bg-zinc-950 bg-opacity-60 text-white flex flex-col items-center justify-center rounded-lg py-7 mb-5 relative z-1 sm:w-6/12">
-          <p className="text-5xl mb-2.5">{weather.temp_c}°C</p>
+          <p className="text-5xl mb-2.5">{tempUnit ? weather.tempC : weather.tempF}{tempSymbol}</p>
           <p className="text-xl mb-7">{weather.condition}</p>
           <div className="flex justify-center gap-4 w-full text-center">
             <p className="text-base">High / Low</p>
-            <p className="text-base">{weather.high}° / {weather.low}°</p>
+            <p className="text-base">{tempUnit ? weather.highC : weather.highF}° / {tempUnit ? weather.lowC : weather.lowF}°</p>
           </div>
         </div>
         <div className="grid grid-cols-2 gap-2.5 mb-5 relative z-1 sm:w-6/12">
