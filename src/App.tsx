@@ -10,11 +10,13 @@ import Spinner from './components/Spinner'
 import Error from './components/Error'
 
 export interface Weather {
-  temp_c: number;
-  temp_f: number;
+  tempC: number;
+  tempF: number;
   condition: string;
-  high: number;
-  low: number;
+  highC: number;
+  lowC: number;
+  highF: number;
+  lowF: number;
   humidity: number;
   wind: number;
   uv: number;
@@ -26,18 +28,20 @@ export interface Weather {
 export interface Hour {
   chanceOfRain: number;
   icon: string;
-  temp_c: number;
-  temp_f: number;
+  tempC: number;
+  tempF: number;
   time: string;
 };
 
 function App() {
   const [weather, setWeather] = useState<Weather>({
-    temp_c: 0,
-    temp_f: 0,
+    tempC: 0,
+    tempF: 0,
     condition: '',
-    high: 0,
-    low: 0,
+    highC: 0,
+    lowC: 0,
+    highF: 0,
+    lowF: 0,
     humidity: 0,
     wind: 0,
     uv: 0,
@@ -48,10 +52,11 @@ function App() {
   const [hourData, setHourData] = useState<Hour[]>([{
     chanceOfRain: 0,
     icon: '',
-    temp_c: 0,
-    temp_f: 0,
+    tempC: 0,
+    tempF: 0,
     time: '',
   }])
+  const [tempUnit, setTempUnit] =useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null)
 
@@ -63,11 +68,13 @@ function App() {
     axios.get(`https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${input}&days=3`)
       .then(res => {
         setWeather({
-          temp_c: res.data.current.temp_c,
-          temp_f: res.data.current.temp_f,
+          tempC: res.data.current.temp_c,
+          tempF: res.data.current.temp_f,
           condition: res.data.current.condition.text,
-          high: res.data.forecast.forecastday[0].day.maxtemp_c,
-          low: res.data.forecast.forecastday[0].day.mintemp_c,
+          highC: res.data.forecast.forecastday[0].day.maxtemp_c,
+          lowC: res.data.forecast.forecastday[0].day.mintemp_c,
+          highF: res.data.forecast.forecastday[0].day.maxtemp_f,
+          lowF: res.data.forecast.forecastday[0].day.mintemp_f,
           humidity: res.data.current.humidity,
           wind: res.data.current.wind_kph,
           uv: res.data.current.uv,
@@ -80,8 +87,8 @@ function App() {
         setHourData(hourlyForecasts.map((hour: any) => ({
           chanceOfRain: hour.chance_of_rain,
           icon: hour.condition.icon,
-          temp_c: hour.temp_c,
-          temp_f: hour.temp_f,
+          tempC: hour.temp_c,
+          tempF: hour.temp_f,
           time: hour.time,
         })));
         setLoading(false)
@@ -96,6 +103,11 @@ function App() {
   useEffect(() => {
     fetchWeatherInfo("Vancouver")
   }, [])
+
+  const handleTempUnit = () => {
+    setTempUnit(!tempUnit)
+  }
+  const tempSymbol = tempUnit ? 'F°' : 'C°';
 
   return (
     <div className='w-10/12 sm:max-w-screen-lg my-0 mx-auto h-screen overflow-scroll'>
@@ -113,11 +125,13 @@ function App() {
         ) : (<>
         <Background weather={weather} />
         <Search onSearch={fetchWeatherInfo} />
+          <div className='relative z-1 text-white flex justify-center w-full mt-5'>
+            <button onClick={handleTempUnit} className='bg-zinc-950 bg-opacity-60 py-1 px-2 rounded-lg' >{tempSymbol}</button>
+          </div>
         <CityInfo weather={weather} />
-        <Detail weather={weather} />
-        <HourlyForecast hourData={hourData} /></>)
+        <Detail weather={weather} tempUnit={tempUnit} />
+        <HourlyForecast hourData={hourData} tempUnit={tempUnit} /></>)
       }
-      
     </div>
   )
 }

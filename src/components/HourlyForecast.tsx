@@ -1,10 +1,10 @@
 import { Hour } from "../App";
 interface HourlyForecastProp {
   hourData: Hour[];
+  tempUnit: boolean;
 }
 
-const HourlyForecast: React.FC<HourlyForecastProp> = ({ hourData }) => {
-
+const HourlyForecast: React.FC<HourlyForecastProp> = ({ hourData, tempUnit }) => {
 
   return (
     <div className="relative z-1 mb-5">
@@ -15,7 +15,7 @@ const HourlyForecast: React.FC<HourlyForecastProp> = ({ hourData }) => {
           return (
             <div key={index} className="bg-zinc-950 bg-opacity-60 text-white text-center rounded-lg flex flex-col items-center justify-between min-w-32 py-3 h-48">
               <p className="text-xl">{formattedTime}</p>
-              <p className="text-lg">{hour.temp_c}°</p>
+              <p className="text-lg">{tempUnit ? hour.tempC : hour.tempF}°</p>
               <img src={hour.icon} alt="icon" />
               <p>{hour.chanceOfRain}%</p>
             </div>
