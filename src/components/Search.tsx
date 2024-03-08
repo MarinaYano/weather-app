@@ -1,11 +1,11 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 
-interface SearchProp {
+type SearchProp = {
   onSearch: (city: string) => void
 }
 
-const Search: React.FC<SearchProp> = ({ onSearch }) => {
+const Search = ({ onSearch }: SearchProp) => {
   const [city, setCity] = useState<string>("")
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
