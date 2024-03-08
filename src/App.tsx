@@ -1,4 +1,3 @@
-import './App.css'
 import Background from './components/Background'
 import Search from './components/Search'
 import CityInfo from './components/CityInfo'
@@ -9,7 +8,7 @@ import axios from "axios";
 import Spinner from './components/Spinner'
 import Error from './components/Error'
 
-export interface Weather {
+export type Weather = {
   tempC: number;
   tempF: number;
   condition: string;
@@ -25,7 +24,7 @@ export interface Weather {
   localTime: string;
 }
 
-export interface Hour {
+export type Hour = {
   chanceOfRain: number;
   icon: string;
   tempC: number;
@@ -59,6 +58,15 @@ function App() {
   const [tempUnit, setTempUnit] =useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    fetchWeatherInfo("Vancouver")
+  }, [])
+
+  const handleTempUnit = () => {
+    setTempUnit(!tempUnit)
+  }
+  const tempSymbol = tempUnit ? 'F°' : 'C°';
 
   const fetchWeatherInfo = (input: string) => {
     setLoading(true)
@@ -100,15 +108,6 @@ function App() {
       .finally(() => setLoading(false))
   }
 
-  useEffect(() => {
-    fetchWeatherInfo("Vancouver")
-  }, [])
-
-  const handleTempUnit = () => {
-    setTempUnit(!tempUnit)
-  }
-  const tempSymbol = tempUnit ? 'F°' : 'C°';
-
   return (
     <div className='w-10/12 sm:max-w-screen-lg my-0 mx-auto h-screen overflow-scroll'>
       {loading ? (
@@ -130,7 +129,7 @@ function App() {
           </div>
         <CityInfo weather={weather} />
         <Detail weather={weather} tempUnit={tempUnit} />
-        <HourlyForecast hourData={hourData} tempUnit={tempUnit} /></>)
+        <HourlyForecast hourData={hourData} tempUnit={tempUnit} weather={weather} /></>)
       }
     </div>
   )

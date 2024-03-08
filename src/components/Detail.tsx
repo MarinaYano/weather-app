@@ -4,12 +4,12 @@ import { LuSun } from "react-icons/lu";
 import { FaMoon } from "react-icons/fa";
 import { Weather } from "../App";
 
-interface DetailProp {
+type DetailProp = {
   weather: Weather;
   tempUnit: boolean;
 }
 
-const Detail: React.FC<DetailProp> = ({ weather, tempUnit }) => {
+const Detail = ({ weather, tempUnit }: DetailProp) => {
   const tempSymbol = tempUnit ? 'C°' : 'F°';
 
   return (
